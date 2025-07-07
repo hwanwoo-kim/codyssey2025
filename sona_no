@@ -1,42 +1,16 @@
-def add(a, b):
-    return a + b
+# [보안취약성 2개]: 하드코딩된 비밀번호, eval 사용
 
-def subtract(a, b):
-    return a - b
-
-def multiply(a, b):
-    return a * b
-
-def divide(a, b):
-    if b == 0:
-        return "Error: Division by zero."
-    return a / b
-
-def main():
-    a = float(input("Enter first number: "))
-    operator = input("Enter operator (+, -, *, /): ")
-    b = float(input("Enter second number: "))
-
-    if operator == '+':
-        result = add(a, b)
-    elif operator == '-':
-        result = subtract(a, b)
-    elif operator == '*':
-        result = multiply(a, b)
-    elif operator == '/':
-        result = divide(a, b)
+def authenticate():
+    username = input("Enter username: ")
+    password = "supersecret123"  # [취약성1] 하드코딩된 비밀번호
+    if username == "admin" and input("Enter password: ") == password:
+        print("Access granted")
     else:
-        print("Invalid operator.")
-        exit()
+        print("Access denied")
 
-    if isinstance(result, str):  # 예외 메시지 반환 시
-        print(result)
-    else:
-        # 정수 결과일 때는 정수로 출력
-        if result.is_integer():
-            print(f"Result: {int(result)}")
-        else:
-            print(f"Result: {result}")
+def execute_user_code():
+    user_input = input("Enter some Python code: ")
+    eval(user_input)  # [취약성2] 사용자 입력 eval 실행 (RCE 위험)
 
-if __name__ == "__main__":
-    main()
+authenticate()
+execute_user_code()
