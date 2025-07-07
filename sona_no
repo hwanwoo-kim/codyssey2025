@@ -1,21 +1,6 @@
-import logging
-
-
-def configure_logging() -> None:
-    """로깅 설정을 구성합니다."""
-    logging.basicConfig(level=logging.INFO, format="%(message)s")
-
-
-def get_welcome_message() -> str:
-    """환영 메시지를 반환합니다."""
-    return "안녕하세요 2027 입학선발 테스트소스입니다."
-
-
 def main() -> None:
-    """메인 함수: 메시지를 출력합니다."""
-    configure_logging()
-    message = get_welcome_message()
-    logging.info(message)
+    message = "안녕하세요 2027 입학선발 테스트소스입니다."
+    print(message)
 
 
 if __name__ == "__main__":
