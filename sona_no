@@ -1,83 +1,21 @@
-from enum import Enum
-from typing import Callable
 import logging
 
 
-class Operation(Enum):
-    ADD = '1'
-    SUBTRACT = '2'
-    MULTIPLY = '3'
-    DIVIDE = '4'
-
-    @staticmethod
-    def get_operation_map() -> dict[str, Callable[[float, float], float]]:
-        return {
-            Operation.ADD.value: lambda x, y: x + y,
-            Operation.SUBTRACT.value: lambda x, y: x - y,
-            Operation.MULTIPLY.value: lambda x, y: x * y,
-            Operation.DIVIDE.value: safe_divide,
-        }
-
-    @staticmethod
-    def display_menu() -> None:
-        descriptions = {
-            Operation.ADD: "덧셈 (+)",
-            Operation.SUBTRACT: "뺄셈 (-)",
-            Operation.MULTIPLY: "곱셈 (*)",
-            Operation.DIVIDE: "나눗셈 (/)"
-        }
-        print("연산을 선택하세요:")
-        for op in Operation:
-            print(f"{op.value}. {descriptions[op]}")
-
-
 def configure_logging() -> None:
+    """로깅 설정을 구성합니다."""
     logging.basicConfig(level=logging.INFO, format="%(message)s")
 
 
-def safe_divide(x: float, y: float) -> float:
-    if y == 0.0:
-        raise ZeroDivisionError("0으로 나눌 수 없습니다.")
-    return x / y
-
-
-def prompt_float(prompt: str) -> float:
-    while True:
-        value = input(prompt).strip()
-        try:
-            return float(value)
-        except ValueError:
-            logging.warning("유효한 숫자를 입력해주세요.")
-
-
-def prompt_operation() -> str:
-    Operation.display_menu()
-    valid_choices = {op.value for op in Operation}
-    while True:
-        choice = input("선택 (1/2/3/4): ").strip()
-        if choice in valid_choices:
-            return choice
-        logging.warning("1~4 사이의 값을 입력해주세요.")
-
-
-def perform_calculation(x: float, y: float, op_key: str) -> float:
-    operation_map = Operation.get_operation_map()
-    operation_func = operation_map[op_key]
-    return operation_func(x, y)
+def get_welcome_message() -> str:
+    """환영 메시지를 반환합니다."""
+    return "안녕하세요 2027 입학선발 테스트소스입니다."
 
 
 def main() -> None:
+    """메인 함수: 메시지를 출력합니다."""
     configure_logging()
-    logging.info("=== 안전한 계산기 프로그램 ===")
-    num1 = prompt_float("첫 번째 숫자 입력: ")
-    num2 = prompt_float("두 번째 숫자 입력: ")
-    operation = prompt_operation()
-
-    try:
-        result = perform_calculation(num1, num2, operation)
-        logging.info(f"결과: {result}")
-    except ZeroDivisionError as e:
-        logging.error(f"오류: {e}")
+    message = get_welcome_message()
+    logging.info(message)
 
 
 if __name__ == "__main__":
