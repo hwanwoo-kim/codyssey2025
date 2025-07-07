@@ -1,16 +1,28 @@
-# [보안취약성 2개]: 하드코딩된 비밀번호, eval 사용
+import getpass
 
-def authenticate():
-    username = input("Enter username: ")
-    password = "supersecret123"  # [취약성1] 하드코딩된 비밀번호
-    if username == "admin" and input("Enter password: ") == password:
-        print("Access granted")
+def login():
+    # 안전한 입력 (하드코딩된 비밀번호 사용 안 함)
+    correct_password = getpass.getpass("Enter your password: ")  # 운영 환경에선 안전하게 암호 저장 필요
+    user_input = getpass.getpass("Enter password again to login: ")
+    
+    if user_input == correct_password:
+        print("Login success")
     else:
-        print("Access denied")
+        print("Login failed")
 
-def execute_user_code():
-    user_input = input("Enter some Python code: ")
-    eval(user_input)  # [취약성2] 사용자 입력 eval 실행 (RCE 위험)
+def safe_menu():
+    print("Select an option:")
+    print("1. Say Hello")
+    print("2. Exit")
+    choice = input("Your choice: ")
+    
+    if choice == "1":
+        print("Hello, welcome!")
+    elif choice == "2":
+        print("Goodbye!")
+    else:
+        print("Invalid choice")
 
-authenticate()
-execute_user_code()
+# 실행
+login()
+safe_menu()
