@@ -1,4 +1,6 @@
-from typing import Callable
+import logging
+
+logging.basicConfig(level=logging.INFO, format='%(message)s')
 
 
 def add(x: float, y: float) -> float:
@@ -14,41 +16,54 @@ def multiply(x: float, y: float) -> float:
 
 
 def divide(x: float, y: float) -> float:
-    if y == 0:
-        raise ValueError("0으로 나눌 수 없습니다.")
+    if y == 0.0:
+        raise ZeroDivisionError("0으로 나눌 수 없습니다.")
     return x / y
 
 
-def get_operation(choice: str) -> Callable[[float, float], float]:
-    operations = {
+def get_number_input(prompt: str) -> float:
+    while True:
+        user_input = input(prompt)
+        try:
+            return float(user_input)
+        except ValueError:
+            logging.warning("잘못된 입력입니다. 숫자를 입력해주세요.")
+
+
+def get_operation_choice() -> str:
+    operations = ['1', '2', '3', '4']
+    logging.info("연산을 선택하세요:")
+    logging.info("1. 덧셈 (+)")
+    logging.info("2. 뺄셈 (-)")
+    logging.info("3. 곱셈 (*)")
+    logging.info("4. 나눗셈 (/)")
+    choice = input("연산 선택 (1/2/3/4): ")
+    while choice not in operations:
+        logging.warning("잘못된 선택입니다. 1~4 중에서 선택하세요.")
+        choice = input("연산 선택 (1/2/3/4): ")
+    return choice
+
+
+def calculate(x: float, y: float, operation: str) -> float:
+    operations_map = {
         "1": add,
         "2": subtract,
         "3": multiply,
         "4": divide
     }
-    if choice not in operations:
-        raise ValueError("올바르지 않은 연산 선택입니다.")
-    return operations[choice]
+    return operations_map[operation](x, y)
 
 
 def main() -> None:
-    print("안전한 계산기 프로그램입니다.")
-    print("1: 덧셈 | 2: 뺄셈 | 3: 곱셈 | 4: 나눗셈")
-
+    logging.info("==== 간단한 계산기 ====")
+    num1 = get_number_input("첫 번째 숫자를 입력하세요: ")
+    num2 = get_number_input("두 번째 숫자를 입력하세요: ")
+    operation = get_operation_choice()
     try:
-        choice = input("원하는 연산을 선택하세요 (1/2/3/4): ").strip()
-        operation = get_operation(choice)
-
-        num1 = float(input("첫 번째 숫자를 입력하세요: "))
-        num2 = float(input("두 번째 숫자를 입력하세요: "))
-
-        result = operation(num1, num2)
-        print(f"결과: {result}")
-
-    except ValueError as ve:
-        print(f"입력 오류: {ve}")
-    except Exception as e:
-        print(f"예상치 못한 오류가 발생했습니다: {e}")
+        result = calculate(num1, num2, operation)
+        logging.info(f"결과: {result}")
+    except ZeroDivisionError as error:
+        logging.error(f"오류: {error}")
 
 
 if __name__ == "__main__":
